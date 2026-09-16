@@ -4,6 +4,7 @@ const slider = document.getElementById("slider");
 let activeTabId = null;
 
 function getVolumeColor(vol) {
+  if (vol === 0) return "#6b7280";
   if (vol > 200) return "#fb5c46";
   if (vol > 100) return "#fbbf24";
   return "#34d399";
