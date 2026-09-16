@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Volume Booster</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <main class="card">
+    <header class="head">
+      <span class="title">Volume Booster</span>
+    </header>
+
+    <div class="readout">
+      <span id="value">100</span><span class="unit">%</span>
+    </div>
+
+    <div class="slider-wrap" id="sliderWrap">
+      <input id="slider" type="range" min="0" max="300" step="1" value="100" />
+      <div class="ticks">
+        <span>0</span>
+        <span>100</span>
+        <span>200</span>
+        <span>300</span>
+      </div>
+    </div>
+  </main>
+  <script src="popup.js"></script>
+</body>
+</html>

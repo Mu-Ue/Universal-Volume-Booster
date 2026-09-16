@@ -1,0 +1,118 @@
+:root {
+  --bg: #111114;
+  --card: #17171b;
+  --text: #f4f4f5;
+  --muted: #8b8b93;
+  --line: #26262c;
+  --accent: var(--accent-low);
+}
+
+:root { --accent-low: #34d399; }
+:root { --accent-mid: #fbbf24; }
+:root { --accent-high: #fb5c46; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  width: 260px;
+  background: var(--bg);
+  font-family: -apple-system, "SF Pro Text", "Segoe UI", Roboto, Inter, Arial, sans-serif;
+  color: var(--text);
+}
+
+.card { padding: 18px 20px 16px; }
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+  transition: color 0.25s ease;
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+.readout {
+  margin-top: 14px;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+#value {
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+  transition: color 0.25s ease;
+}
+
+.unit {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.slider-wrap { margin: 6px 2px 4px; }
+
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--accent) 0%,
+    var(--accent) calc(var(--pct, 33.33) * 1%),
+    var(--line) calc(var(--pct, 33.33) * 1%),
+    var(--line) 100%
+  );
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--text);
+  border: 3px solid var(--accent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  transition: border-color 0.25s ease, transform 0.1s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+  transform: scale(1.12);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--text);
+  border: 3px solid var(--accent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+input[type="range"]::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--line);
+}
+
+.ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 6px;
+  padding: 0 1px;
+}
