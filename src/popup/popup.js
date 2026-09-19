@@ -6,18 +6,20 @@ let firstRenderDone = false;
 
 function getVolumeColor(vol) {
   if (vol === 0) return "#6b7280";
-  if (vol > 200) return "#fb5c46";
-  if (vol > 100) return "#fbbf24";
+  if (vol > 400) return "#fb5c46";
+  if (vol > 300) return "#f97316";
+  if (vol > 200) return "#fbbf24";
+  if (vol > 100) return "#a3e635";
   return "#34d399";
 }
 
 function render(volume) {
-  const clamped = Math.max(0, Math.min(300, volume));
+  const clamped = Math.max(0, Math.min(500, volume));
   slider.value = clamped;
   valueEl.textContent = Math.round(clamped);
 
   const color = getVolumeColor(clamped);
-  const pct = (clamped / 300) * 100;
+  const pct = (clamped / 500) * 100;
 
   document.documentElement.style.setProperty("--accent", color);
   document.documentElement.style.setProperty("--pct", pct);
