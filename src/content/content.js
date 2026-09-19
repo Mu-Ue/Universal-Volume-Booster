@@ -10,15 +10,20 @@
   const watched = new WeakSet(); // elements with a "play" listener already attached
   const gainNodes = new Set();
 
-  let sessionId = null;
-  function getSessionId() {
-    if (sessionId) return sessionId;
-    try { sessionId = crypto.randomUUID(); } catch (_) { sessionId = Date.now().toString(36) + Math.random().toString(36).slice(2); }
-    return sessionId;
+  const TAB_ID_KEY = "__volboost_tabid";
+  let tabId = null;
+  function getTabId() {
+    if (tabId) return tabId;
+    try { tabId = sessionStorage.getItem(TAB_ID_KEY); } catch (_) {}
+    if (!tabId) {
+      try { tabId = crypto.randomUUID(); } catch (_) { tabId = Date.now().toString(36) + Math.random().toString(36).slice(2); }
+      try { sessionStorage.setItem(TAB_ID_KEY, tabId); } catch (_) {}
+    }
+    return tabId;
   }
 
   function storageKey() {
-    return STORAGE_PREFIX + getSessionId();
+    return STORAGE_PREFIX + getTabId();
   }
 
   function ensureContext() {
