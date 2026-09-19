@@ -2,7 +2,7 @@
   "use strict";
 
   const STORAGE_PREFIX = "volboost:";
-  const DEFAULT_GAIN = 1.5; // meaningful default boost — users expect a booster to boost
+  const DEFAULT_GAIN = 1.0; // meaningful default boost — users expect a booster to boost
 
   let audioCtx = null;
   let currentGain = DEFAULT_GAIN;
