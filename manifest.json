@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Volume Booster",
   "version": "1.0.0",
-  "description": "Boost the volume of HTML5 audio and video on web pages up to 300%.",
+  "description": "Boost the volume of HTML5 audio and video on web pages up to 500%.",
   "permissions": ["storage", "activeTab"],
   "host_permissions": ["<all_urls>"],
   "action": {

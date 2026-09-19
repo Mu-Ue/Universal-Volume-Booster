@@ -1,6 +1,6 @@
 # Volume Booster
 
-Boost any page's audio up to 300%.
+Boost any page's audio up to 500%.
 
 ## Install
 
