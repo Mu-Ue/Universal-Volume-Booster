@@ -23,6 +23,7 @@ function render(volume) {
 
   document.documentElement.style.setProperty("--accent", color);
   document.documentElement.style.setProperty("--pct", pct);
+  slider.style.setProperty("--fg", color);
 
   // Only reveal the body on first render (startup).
   if (!firstRenderDone) {
