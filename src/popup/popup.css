@@ -21,6 +21,8 @@ body {
   background: var(--bg);
   font-family: -apple-system, "SF Pro Text", "Segoe UI", Roboto, Inter, Arial, sans-serif;
   color: var(--text);
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .card { padding: 18px 20px 16px; }
