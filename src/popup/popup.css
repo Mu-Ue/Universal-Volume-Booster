@@ -106,13 +106,19 @@ input[type="range"]::-moz-range-thumb {
 }
 
 input[type="range"]::-moz-range-progress {
-  background: var(--fg, var(--accent));
+  height: 6px;
 }
 
 input[type="range"]::-moz-range-track {
   height: 6px;
   border-radius: 999px;
-  background: var(--line);
+  background: linear-gradient(
+    to right,
+    var(--fg, var(--accent)) 0%,
+    var(--fg, var(--accent)) var(--pct, 33.33),
+    var(--line) var(--pct, 33.33),
+    var(--line) 100%
+  );
 }
 
 .ticks {
