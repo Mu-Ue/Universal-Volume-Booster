@@ -10,8 +10,15 @@
   const watched = new WeakSet(); // elements with a "play" listener already attached
   const gainNodes = new Set();
 
+  let sessionId = null;
+  function getSessionId() {
+    if (sessionId) return sessionId;
+    try { sessionId = crypto.randomUUID(); } catch (_) { sessionId = Date.now().toString(36) + Math.random().toString(36).slice(2); }
+    return sessionId;
+  }
+
   function storageKey() {
-    return STORAGE_PREFIX + location.hostname;
+    return STORAGE_PREFIX + getSessionId();
   }
 
   function ensureContext() {
