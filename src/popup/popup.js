@@ -2,6 +2,7 @@ const valueEl = document.getElementById("value");
 const slider = document.getElementById("slider");
 
 let activeTabId = null;
+let firstRenderDone = false;
 
 function getVolumeColor(vol) {
   if (vol === 0) return "#6b7280";
@@ -20,6 +21,18 @@ function render(volume) {
 
   document.documentElement.style.setProperty("--accent", color);
   document.documentElement.style.setProperty("--pct", pct);
+
+  // Only reveal the body on first render (startup).
+  if (!firstRenderDone) {
+    firstRenderDone = true;
+    // First RAF: ensure the correct-color frame is painted.
+    requestAnimationFrame(() => {
+      // Second RAF: allow transitions to work normally after revealing.
+      requestAnimationFrame(() => {
+        document.body.style.display = "block";
+      });
+    });
+  }
 }
 
 function sendVolume(volume) {

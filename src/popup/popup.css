@@ -11,9 +11,12 @@
 :root { --accent-mid: #fbbf24; }
 :root { --accent-high: #fb5c46; }
 
+html { background: #111114; }
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
+  display: none;
   width: 260px;
   background: var(--bg);
   font-family: -apple-system, "SF Pro Text", "Segoe UI", Roboto, Inter, Arial, sans-serif;
