@@ -36,7 +36,8 @@ async function pushSettings(tabId: number, settings: BoostSettings): Promise<voi
   await sendToTab(tabId, { type: "vb/apply", settings });
 }
 
-async function updateBadge(tabId: number, gain: number): Promise<void> {
+/** Omitting `tabId` sets the default badge shown on tabs without their own. */
+async function updateBadge(tabId: number | undefined, gain: number): Promise<void> {
   try {
     await Promise.all([
       chrome.action.setBadgeText({ tabId, text: badgeText(gain) }),
@@ -107,6 +108,9 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 });
 
 // ── Lifecycle ────────────────────────────────────────────────────────────
+
+// Tabs the content script can't reach (new tab, browser pages) still show 100.
+void updateBadge(undefined, GAIN_DEFAULT);
 
 chrome.runtime.onInstalled.addListener(({ reason }) => {
   if (reason === "update") void purgeLegacyStorage();

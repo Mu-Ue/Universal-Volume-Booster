@@ -20,10 +20,6 @@ export function clampGain(value: unknown): number {
   return Math.min(GAIN_MAX, Math.max(GAIN_MIN, snapped));
 }
 
-export function isUnity(gain: number): boolean {
-  return clampGain(gain) === GAIN_DEFAULT;
-}
-
 export function gainToPercent(gain: number): number {
   return Math.round(clampGain(gain) * 100);
 }
@@ -59,9 +55,9 @@ export function levelOf(gain: number): Level {
   return "extreme";
 }
 
-/** Toolbar badge text: empty at unity so untouched tabs stay clean. */
+/** Toolbar badge text: the current volume in percent. */
 export function badgeText(gain: number): string {
-  return isUnity(gain) ? "" : String(gainToPercent(gain));
+  return String(gainToPercent(gain));
 }
 
 export const BADGE_COLORS: Readonly<Record<Level, string>> = {
