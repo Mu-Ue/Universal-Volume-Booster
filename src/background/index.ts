@@ -2,14 +2,13 @@
  * Background service worker (event page on Firefox). It is the single
  * authority over per-tab state:
  *
- *   popup / shortcuts ──write──► storage ──onChanged──► background ──push──► content (all frames)
- *                                                           └──► toolbar badge
+ *   popup ──write──► storage ──onChanged──► background ──push──► content (all frames)
+ *                                               └──► toolbar badge
  *
- * Because every writer goes through storage, the popup and the keyboard
- * shortcuts never have to coordinate with each other. The worker holds no
- * in-memory state, so it can be terminated at any time without losing data.
+ * The worker holds no in-memory state, so it can be terminated at any time
+ * without losing data.
  */
-import { BADGE_COLORS, badgeText, COMMAND_STEP, GAIN_DEFAULT, levelOf, stepGain } from "../shared/gain";
+import { BADGE_COLORS, badgeText, GAIN_DEFAULT, levelOf } from "../shared/gain";
 import type { BoostSettings, ContentMessage } from "../shared/messages";
 import { isBackgroundMessage } from "../shared/messages";
 import {
@@ -20,7 +19,6 @@ import {
   parseTabKey,
   parseTabState,
   purgeLegacyStorage,
-  setTabState,
 } from "../shared/storage";
 import type { TabState } from "../shared/storage";
 
@@ -106,34 +104,6 @@ chrome.storage.onChanged.addListener((changes, area) => {
 
 chrome.tabs.onRemoved.addListener((tabId) => {
   void clearTabState(tabId);
-});
-
-// ── Keyboard shortcuts ───────────────────────────────────────────────────
-
-async function adjustActiveTab(command: string, tab?: chrome.tabs.Tab): Promise<void> {
-  const target = tab ?? (await chrome.tabs.query({ active: true, currentWindow: true }))[0];
-  if (target?.id === undefined) return;
-
-  const current = await resolveTabState(target.id, target.url);
-  let gain: number;
-  switch (command) {
-    case "volume-up":
-      gain = stepGain(current.gain, COMMAND_STEP);
-      break;
-    case "volume-down":
-      gain = stepGain(current.gain, -COMMAND_STEP);
-      break;
-    case "volume-reset":
-      gain = GAIN_DEFAULT;
-      break;
-    default:
-      return;
-  }
-  await setTabState(target.id, { gain, origin: originOf(target.url), source: "command" });
-}
-
-chrome.commands.onCommand.addListener((command, tab) => {
-  void adjustActiveTab(command, tab);
 });
 
 // ── Lifecycle ────────────────────────────────────────────────────────────

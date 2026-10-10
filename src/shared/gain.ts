@@ -8,9 +8,6 @@ export const GAIN_MIN = 0;
 export const GAIN_MAX = 5;
 export const GAIN_DEFAULT = 1;
 
-/** Step used by the keyboard shortcuts (25 percentage points). */
-export const COMMAND_STEP = 0.25;
-
 /**
  * Coerce untrusted input into a valid gain. Anything that is not a finite
  * number falls back to unity, so a corrupt value can never blast the user.
@@ -33,10 +30,6 @@ export function gainToPercent(gain: number): number {
 
 export function percentToGain(percent: number): number {
   return clampGain(percent / 100);
-}
-
-export function stepGain(gain: number, delta: number): number {
-  return clampGain(clampGain(gain) + delta);
 }
 
 /** Linear gain → decibels relative to the original signal. */

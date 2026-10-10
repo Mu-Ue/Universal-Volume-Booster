@@ -12,7 +12,7 @@ import {
   percentToGain,
 } from "../shared/gain";
 import { isContentStatus } from "../shared/messages";
-import { getTabState, originOf, parseTabKey, parseTabState, setTabState } from "../shared/storage";
+import { getTabState, originOf, parseTabKey, setTabState } from "../shared/storage";
 
 function $<T extends HTMLElement>(id: string, type: new () => T): T {
   const el = document.getElementById(id);
@@ -137,7 +137,7 @@ async function init(): Promise<void> {
       requestAnimationFrame(() => {
         const g = pendingGain;
         pendingGain = null;
-        if (g !== null) void setTabState(tabId, { gain: g, origin, source: "popup" });
+        if (g !== null) void setTabState(tabId, { gain: g, origin });
       });
     }
     pendingGain = gain;
@@ -161,14 +161,11 @@ async function init(): Promise<void> {
     tick.addEventListener("click", () => { commit(percentToGain(Number(tick.dataset.percent))); });
   }
 
-  // Reflect changes made elsewhere (keyboard shortcuts, site navigation)
-  // while the popup is open, but ignore echoes of our own writes.
+  // Reflect a reset (the tab moved to another site) while the popup is open.
+  // Any other change is an echo of our own writes, so it is ignored.
   chrome.storage.session.onChanged.addListener((changes) => {
     for (const [key, change] of Object.entries(changes)) {
-      if (parseTabKey(key) !== tabId) continue;
-      const next = parseTabState(change.newValue);
-      if (next?.source === "popup") continue;
-      render(next?.gain ?? 1);
+      if (parseTabKey(key) === tabId && change.newValue === undefined) render(1);
     }
   });
 }

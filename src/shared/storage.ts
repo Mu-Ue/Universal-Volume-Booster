@@ -12,8 +12,6 @@ export interface TabState {
   readonly gain: number;
   /** Top-level origin the gain was set on; navigating elsewhere resets it. */
   readonly origin: string | null;
-  /** Which UI made the change, so the popup can ignore its own echoes. */
-  readonly source: "popup" | "command";
 }
 
 const TAB_KEY_PREFIX = "tab:";
@@ -38,7 +36,6 @@ export function parseTabState(value: unknown): TabState | null {
   return {
     gain: clampGain(v.gain),
     origin: typeof v.origin === "string" ? v.origin : null,
-    source: v.source === "command" ? "command" : "popup",
   };
 }
 
@@ -70,7 +67,6 @@ export async function setTabState(tabId: number, state: TabState): Promise<void>
 export const DEFAULT_TAB_STATE: TabState = {
   gain: GAIN_DEFAULT,
   origin: null,
-  source: "popup",
 };
 
 export async function clearTabState(tabId: number): Promise<void> {
