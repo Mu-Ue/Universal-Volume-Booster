@@ -1,4 +1,4 @@
-# Volume Booster
+# <img src="public/icons/icon128.png" alt="" width="32" align="center"> Volume Booster
 
 Boost any tab's audio up to **500%**, including DRM-protected streams.
 
