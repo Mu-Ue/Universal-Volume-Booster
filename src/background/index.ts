@@ -92,7 +92,8 @@ chrome.runtime.onMessage.addListener((message: unknown, sender, sendResponse) =>
 
 // ── State fan-out ────────────────────────────────────────────────────────
 
-chrome.storage.session.onChanged.addListener((changes) => {
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area !== "session") return;
   void (async () => {
     for (const [key, change] of Object.entries(changes)) {
       const tabId = parseTabKey(key);
