@@ -1,18 +1,19 @@
 {
   "name": "volume-booster",
-  "version": "1.0.0",
-  "description": "Chrome extension that boosts the volume of HTML5 audio and video on any page up to 500%, using a per-site Web Audio gain stage.",
-  "author": "",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Boost any tab's audio up to 500%, including DRM-protected streams, with a built-in limiter to prevent distortion.",
+  "author": "Mu-Ue",
   "license": "MIT",
   "type": "module",
-  "keywords": [
-    "chrome-extension",
-    "volume-booster",
-    "audio",
-    "web-audio-api",
-    "browser-extension"
-  ],
-  "browserslist": [
-    "defaults"
-  ]
+  "scripts": {
+    "dev": "node scripts/build.mjs --watch",
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.3.5",
+    "esbuild": "^0.28.2",
+    "typescript": "^6.0.3"
+  }
 }

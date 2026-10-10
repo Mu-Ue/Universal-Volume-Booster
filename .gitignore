@@ -1,14 +1,11 @@
-# Dependencies
 node_modules/
+dist/
 
 # IDE
-.vscode/*.iml
 .idea/
+.vscode/*
+!.vscode/extensions.json
 
 # OS
 .DS_Store
 Thumbs.db
-
-# Build outputs (if any)
-dist/
-build/
