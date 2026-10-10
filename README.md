@@ -1,12 +1,12 @@
 # Volume Booster
 
-Boost any tab's audio up to **500%**, including DRM-protected streams, with automatic crackle protection. Manifest V3, works in Chrome and Firefox.
+Boost any tab's audio up to **500%**, including DRM-protected streams. Manifest V3, works in Chrome and Firefox.
 
 ## Features
 
 - **0–500% per tab**, shown as a percentage and in dB. A badge on the toolbar icon shows the current level.
 - **Works with DRM content.** EME protects decryption, not the decoded audio, so MSE/EME players (blob: URLs) route through Web Audio normally.
-- **Crackle protection** is always on: a safety limiter catches only the peaks that would otherwise clip, and leaves everything quieter untouched (its automatic makeup gain is cancelled out).
+- **No limiter or compression.** Audio is amplified exactly as set, so you are in full control: if it distorts, turn it down.
 - **Keyboard shortcuts:** `Alt+Shift+Up` / `Alt+Shift+Down` (±25%), `Alt+Shift+V` opens the popup.
 - **Scoped to the site:** a boost survives reloads and navigation within the same site, but resets when the tab moves to a different origin, so a 500% boost doesn't follow you onto a loud page.
 - Reaches media inside open and **closed** shadow roots and inside iframes.
@@ -22,7 +22,7 @@ popup / shortcuts ──write──► storage.session ──onChanged──► 
 | Part | Responsibility |
 | --- | --- |
 | `src/background` | Single source of truth. Stateless service worker: fans out storage changes to tabs and updates badges. |
-| `src/content/engine.ts` | `BoostEngine`: a shared `MediaElementSource → Gain → Limiter → Trim → destination` graph per frame. |
+| `src/content/engine.ts` | `BoostEngine`: a shared `MediaElementSource → Gain → destination` graph per frame. |
 | `src/content/index.ts` | Messaging, lazy sync, and adopting the engine after an extension update. |
 | `src/popup` | Framework-free UI (about 4 KB). |
 | `src/shared` | Gain math, the message protocol, and the storage schema. |
