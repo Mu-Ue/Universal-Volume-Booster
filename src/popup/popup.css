@@ -1,38 +1,96 @@
 :root {
-  --bg: #111114;
-  --card: #17171b;
-  --text: #f4f4f5;
-  --muted: #8b8b93;
-  --line: #26262c;
-  --accent: var(--accent-low);
+  color-scheme: light dark;
+
+  --bg: #ffffff;
+  --surface: #f4f4f5;
+  --text: #18181b;
+  --muted: #71717a;
+  --line: #e4e4e7;
+  --focus: #2563eb;
+
+  --c-muted: #6b7280;
+  --c-normal: #059669;
+  --c-boost: #65a30d;
+  --c-high: #ca8a04;
+  --c-higher: #ea580c;
+  --c-extreme: #dc2626;
 }
 
-:root { --accent-low: #34d399; }
-:root { --accent-mid: #fbbf24; }
-:root { --accent-high: #fb5c46; }
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111114;
+    --surface: #1c1c21;
+    --text: #f4f4f5;
+    --muted: #8b8b93;
+    --line: #2a2a31;
+    --focus: #60a5fa;
 
-html { background: #111114; }
+    --c-normal: #34d399;
+    --c-boost: #a3e635;
+    --c-high: #fbbf24;
+    --c-higher: #f97316;
+    --c-extreme: #fb5c46;
+  }
+}
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* The level → colour mapping lives here so it can follow the theme. */
+[data-level="muted"] { --accent: var(--c-muted); }
+[data-level="normal"] { --accent: var(--c-normal); }
+[data-level="boost"] { --accent: var(--c-boost); }
+[data-level="high"] { --accent: var(--c-high); }
+[data-level="higher"] { --accent: var(--c-higher); }
+[data-level="extreme"] { --accent: var(--c-extreme); }
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background: var(--bg);
+}
 
 body {
-  display: none;
-  width: 260px;
+  width: 280px;
   background: var(--bg);
-  font-family: -apple-system, "SF Pro Text", "Segoe UI", Roboto, Inter, Arial, sans-serif;
   color: var(--text);
+  font: 13px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   user-select: none;
   -webkit-user-select: none;
 }
 
-.card { padding: 18px 20px 16px; }
+/* Hidden (but laid out, so the popup opens at its final size) until the
+   first render has applied the correct values and colours. */
+body:not(.ready) {
+  visibility: hidden;
+}
+
+/* Transitions only after the first paint, so nothing animates on open. */
+body.animated .card,
+body.animated .card * {
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.card {
+  padding: 16px 18px 18px;
+}
 
 .head {
   display: flex;
   align-items: center;
   gap: 8px;
   color: var(--accent);
-  transition: color 0.25s ease;
+}
+
+.logo {
+  width: 18px;
+  height: 18px;
 }
 
 .title {
@@ -42,8 +100,10 @@ body {
   color: var(--text);
 }
 
+/* ── Readout ─────────────────────────────────────────────────────────── */
+
 .readout {
-  margin-top: 14px;
+  margin-top: 12px;
   display: flex;
   align-items: baseline;
   justify-content: center;
@@ -52,11 +112,11 @@ body {
 }
 
 #value {
-  font-size: 44px;
+  font-size: 46px;
   font-weight: 700;
+  line-height: 1;
   letter-spacing: -0.02em;
   color: var(--accent);
-  transition: color 0.25s ease;
 }
 
 .unit {
@@ -65,69 +125,227 @@ body {
   color: var(--muted);
 }
 
-.slider-wrap { margin: 6px 2px 4px; }
+.db {
+  margin-top: 4px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Slider ──────────────────────────────────────────────────────────── */
+
+.slider-wrap {
+  margin: 12px 2px 0;
+}
 
 input[type="range"] {
+  --pct: 20%;
   -webkit-appearance: none;
+  appearance: none;
+  display: block;
   width: 100%;
+  height: 18px;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
   height: 6px;
   border-radius: 999px;
   background: linear-gradient(
     to right,
-    var(--accent) 0%,
-    var(--accent) calc(var(--pct, 33.33) * 1%),
-    var(--line) calc(var(--pct, 33.33) * 1%),
-    var(--line) 100%
+    var(--accent) 0 var(--pct),
+    var(--line) var(--pct) 100%
   );
-  outline: none;
-  cursor: pointer;
 }
 
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 18px;
   height: 18px;
+  margin-top: -6px;
   border-radius: 50%;
   background: var(--text);
   border: 3px solid var(--accent);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-  transition: border-color 0.25s ease, transform 0.1s ease;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.35);
+  transition: transform 0.1s ease;
 }
 
-input[type="range"]::-webkit-slider-thumb:active {
+input[type="range"]:active::-webkit-slider-thumb {
   transform: scale(1.12);
-}
-
-input[type="range"]::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--text);
-  border: 3px solid var(--accent);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-}
-
-input[type="range"]::-moz-range-progress {
-  height: 6px;
 }
 
 input[type="range"]::-moz-range-track {
   height: 6px;
   border-radius: 999px;
-  background: linear-gradient(
-    to right,
-    var(--fg, var(--accent)) 0%,
-    var(--fg, var(--accent)) var(--pct, 33.33),
-    var(--line) var(--pct, 33.33),
-    var(--line) 100%
-  );
+  background: var(--line);
+}
+
+input[type="range"]::-moz-range-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--text);
+  border: 3px solid var(--accent);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.35);
 }
 
 .ticks {
   display: flex;
   justify-content: space-between;
+  margin-top: 4px;
+  padding: 0 3px;
   font-size: 10px;
   color: var(--muted);
-  margin-top: 6px;
-  padding: 0 1px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Presets ─────────────────────────────────────────────────────────── */
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 14px;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+button:focus-visible,
+.toggle input:focus-visible + .toggle-track {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.chip {
+  padding: 5px 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.chip:hover {
+  border-color: var(--muted);
+}
+
+.chip[aria-pressed="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Limiter toggle ──────────────────────────────────────────────────── */
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  cursor: pointer;
+}
+
+.toggle input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggle-track {
+  position: relative;
+  flex: none;
+  width: 30px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--line);
+}
+
+.toggle-track::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--bg);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.3);
+  transition: transform 0.15s ease;
+}
+
+.toggle input:checked + .toggle-track {
+  background: var(--accent);
+}
+
+.toggle input:checked + .toggle-track::after {
+  transform: translateX(12px);
+}
+
+.toggle-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.toggle-title {
+  font-weight: 600;
+}
+
+.toggle-hint {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ── Disabled / notice states ────────────────────────────────────────── */
+
+.controls[aria-disabled="true"] {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.notice {
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.notice .primary {
+  margin-top: 8px;
+  width: 100%;
+  padding: 6px 0;
+  border: none;
+  border-radius: 6px;
+  background: var(--focus);
+  color: #fff;
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
 }

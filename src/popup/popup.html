@@ -1,32 +1,72 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Volume Booster</title>
-  <link rel="stylesheet" href="popup.css" />
-</head>
-<body>
-  <main class="card">
-    <header class="head">
-      <span class="title">Volume Booster</span>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Volume Booster</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="card" id="card" data-level="normal">
+      <header class="head">
+        <svg class="logo" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 9v6h4l5 5V4L7 9H3z" fill="currentColor" />
+          <path
+            d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+        <h1 class="title">Volume Booster</h1>
+      </header>
 
-    <div class="readout">
-      <span id="value">100</span><span class="unit">%</span>
-    </div>
+      <section id="controls" class="controls">
+        <div class="readout" aria-hidden="true">
+          <span id="value">100</span><span class="unit">%</span>
+        </div>
+        <p id="db" class="db" aria-hidden="true">0.0 dB</p>
 
-    <div class="slider-wrap" id="sliderWrap">
-      <input id="slider" type="range" min="0" max="500" step="1" value="100" />
-      <div class="ticks">
-        <span>0</span>
-        <span>100</span>
-        <span>200</span>
-        <span>300</span>
-        <span>400</span>
-        <span>500</span>
-      </div>
-    </div>
-  </main>
-  <script src="popup.js"></script>
-</body>
+        <div class="slider-wrap">
+          <input
+            id="slider"
+            type="range"
+            min="0"
+            max="500"
+            step="1"
+            value="100"
+            aria-label="Volume"
+          />
+          <div class="ticks" aria-hidden="true">
+            <span>0</span><span>100</span><span>200</span><span>300</span><span>400</span
+            ><span>500</span>
+          </div>
+        </div>
+
+        <div class="presets" role="group" aria-label="Presets">
+          <button type="button" class="chip" data-percent="100" title="Reset to original volume">
+            100%
+          </button>
+          <button type="button" class="chip" data-percent="200">200%</button>
+          <button type="button" class="chip" data-percent="300">300%</button>
+          <button type="button" class="chip" data-percent="500">500%</button>
+        </div>
+
+        <label class="toggle">
+          <input id="limiter" type="checkbox" role="switch" checked />
+          <span class="toggle-track" aria-hidden="true"></span>
+          <span class="toggle-text">
+            <span class="toggle-title">Limiter</span>
+            <span class="toggle-hint">Prevents distortion at high boost</span>
+          </span>
+        </label>
+      </section>
+
+      <section id="notice" class="notice" role="status" hidden>
+        <p id="notice-text"></p>
+        <button id="notice-action" type="button" class="primary" hidden></button>
+      </section>
+    </main>
+    <script src="popup.js"></script>
+  </body>
 </html>
