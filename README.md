@@ -2,6 +2,8 @@
 
 Boost any tab's audio up to **500%**, including DRM-protected streams.
 
+<img src="docs/popup.png" alt="Volume Booster popup" width="280">
+
 ## Features
 
 - 0–500%, shown as a percentage and in dB, with the level on the toolbar badge.
