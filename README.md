@@ -1,4 +1,4 @@
-<img src="public/icons/icon128.png" alt="" width="64">
+<p align="center"><img src="public/icons/icon128.png" alt="" width="64"></p>
 
 # Volume Booster
 
