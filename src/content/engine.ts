@@ -3,7 +3,7 @@
  * gain stage.
  *
  *   <video>/<audio> ─► MediaElementSource ─┐
- *   <video>/<audio> ─► MediaElementSource ─┼─► GainNode ─► Limiter ─► Makeup trim ─► destination
+ *   <video>/<audio> ─► MediaElementSource ─┼─► GainNode ─► destination
  *   <video>/<audio> ─► MediaElementSource ─┘
  *
  * Design rules:
@@ -64,20 +64,6 @@ export interface EngineStats {
 
 /** Smoothing time constant for gain changes; avoids zipper noise. */
 const GAIN_RAMP_SECONDS = 0.015;
-
-/**
- * Always-on safety limiter. It only acts on peaks that would otherwise clip
- * (crackle) at the output; everything quieter passes through untouched.
- */
-const LIMITER_THRESHOLD_DB = -2;
-const LIMITER_RATIO = 20; // the API maximum
-/**
- * DynamicsCompressorNode always applies automatic makeup gain (Web Audio spec:
- * `(1 / fullRangeGain) ^ 0.6`), which would raise even quiet audio. A fixed
- * trim after the limiter cancels it exactly, keeping the limiter transparent.
- */
-const LIMITER_MAKEUP_DB = 0.6 * -LIMITER_THRESHOLD_DB * (1 - 1 / LIMITER_RATIO);
-const LIMITER_TRIM = 10 ** (-LIMITER_MAKEUP_DB / 20);
 const GESTURE_EVENTS = ["pointerdown", "keydown", "touchend"] as const;
 
 export class BoostEngine {
@@ -243,17 +229,7 @@ export class BoostEngine {
     const input = ctx.createGain();
     input.gain.value = this.#settings.gain;
 
-    const limiter = ctx.createDynamicsCompressor();
-    limiter.threshold.value = LIMITER_THRESHOLD_DB;
-    limiter.knee.value = 0;
-    limiter.ratio.value = LIMITER_RATIO;
-    limiter.attack.value = 0.002;
-    limiter.release.value = 0.15;
-
-    const trim = ctx.createGain();
-    trim.gain.value = LIMITER_TRIM;
-
-    input.connect(limiter).connect(trim).connect(ctx.destination);
+    input.connect(ctx.destination);
 
     this.#ctx = ctx;
     this.#input = input;

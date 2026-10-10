@@ -19,7 +19,7 @@ import { BoostEngine } from "./engine";
  * shares our isolated world we can adopt its engine (and the elements it has
  * already captured, which nobody else can capture again).
  */
-const ENGINE_API_VERSION = 1;
+const ENGINE_API_VERSION = 2;
 const INSTANCE_KEY = "__volumeBooster__";
 
 interface Instance {
