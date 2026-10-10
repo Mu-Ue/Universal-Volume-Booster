@@ -5,15 +5,15 @@
  *   node scripts/build.mjs           # production build
  *   node scripts/build.mjs --watch   # dev build, rebuild on change
  *
- * Output: dist/extension/ (load unpacked from here).
+ * Output: dist/ (load unpacked from here).
  */
 import { cp, mkdir, rm } from "node:fs/promises";
 import * as esbuild from "esbuild";
 
-const OUTDIR = "dist/extension";
+const OUTDIR = "dist";
 const dev = process.argv.includes("--watch");
 
-await rm("dist", { recursive: true, force: true });
+await rm(OUTDIR, { recursive: true, force: true });
 await mkdir(OUTDIR, { recursive: true });
 await Promise.all([
   cp("public", OUTDIR, { recursive: true }),
@@ -43,7 +43,7 @@ const options = {
 
 if (dev) {
   await (await esbuild.context(options)).watch();
-  console.log("Watching for changes… load dist/extension as an unpacked extension.");
+  console.log("Watching for changes… load dist as an unpacked extension.");
 } else {
   await esbuild.build(options);
 }

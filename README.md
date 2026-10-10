@@ -14,8 +14,8 @@ Requires Node 20.12+.
 
 ```sh
 npm install
-npm run build      # → dist/extension
+npm run build      # → dist
 ```
 
-- Chrome: `chrome://extensions` → *Load unpacked* → `dist/extension`
-- Firefox: `about:debugging` → *Load Temporary Add-on* → `dist/extension/manifest.json`
+- Chrome: `chrome://extensions` → *Load unpacked* → `dist`
+- Firefox: `about:debugging` → *Load Temporary Add-on* → `dist/manifest.json`
