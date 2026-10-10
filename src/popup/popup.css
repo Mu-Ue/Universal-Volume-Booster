@@ -98,6 +98,9 @@ body.animated .card * {
   font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--text);
+  /* Trim the line box to the cap height so the glyphs, not the font's
+     uneven ascent/descent, are what gets centred against the logo. */
+  text-box: trim-both cap alphabetic;
 }
 
 /* ── Readout ─────────────────────────────────────────────────────────── */
