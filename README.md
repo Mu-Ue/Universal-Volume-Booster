@@ -10,7 +10,7 @@ Boost any tab's audio up to **500%**, including DRM-protected streams, with auto
 - **Keyboard shortcuts:** `Alt+Shift+Up` / `Alt+Shift+Down` (±25%), `Alt+Shift+V` opens the popup.
 - **Scoped to the site:** a boost survives reloads and navigation within the same site, but resets when the tab moves to a different origin, so a 500% boost doesn't follow you onto a loud page.
 - Reaches media inside open and **closed** shadow roots and inside iframes.
-- Light and dark themes, keyboard and screen-reader accessible, presets, mouse-wheel control.
+- Light and dark themes, keyboard and screen-reader accessible, clickable preset labels, mouse-wheel control.
 
 ## Architecture
 
