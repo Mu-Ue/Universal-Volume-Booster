@@ -78,7 +78,7 @@ body.animated .card * {
 }
 
 .card {
-  padding: 16px 18px 18px;
+  padding: 18px;
 }
 
 .head {
@@ -206,11 +206,13 @@ input[type="range"]::-moz-range-thumb {
 /* ── Preset labels ───────────────────────────────────────────────────── */
 
 /* Each label is centred under the thumb position for its value (the 18px
-   thumb's centre travels from 9px in on each side) with a large hit area. */
+   thumb's centre travels from 9px in on each side) with a large hit area.
+   The negative bottom margin cancels the hit area's empty space below the
+   text so the visible gap matches the card padding. */
 .ticks {
   position: relative;
   height: 28px;
-  margin: 2px 9px 0;
+  margin: 2px 9px -6px;
 }
 
 button {
@@ -236,6 +238,7 @@ button:focus-visible {
   background: transparent;
   color: var(--muted);
   font-size: 11px;
+  line-height: 16px;
   font-variant-numeric: tabular-nums;
 }
 
@@ -257,7 +260,7 @@ button:focus-visible {
 }
 
 .notice {
-  margin-top: 14px;
+  margin-top: 12px;
   padding: 10px 12px;
   border-radius: 8px;
   background: var(--surface);
