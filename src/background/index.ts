@@ -15,12 +15,8 @@ import { isBackgroundMessage } from "../shared/messages";
 import {
   clearTabState,
   DEFAULT_TAB_STATE,
-  getAllTabStates,
-  getSettings,
   getTabState,
-  isSettingsKey,
   originOf,
-  parseSettings,
   parseTabKey,
   parseTabState,
   purgeLegacyStorage,
@@ -84,8 +80,7 @@ chrome.runtime.onMessage.addListener((message: unknown, sender, sendResponse) =>
     const state = isTopFrame
       ? await resolveTabState(tabId, sender.url ?? sender.tab?.url)
       : ((await getTabState(tabId)) ?? DEFAULT_TAB_STATE);
-    const { limiter } = await getSettings();
-    const settings: BoostSettings = { gain: state.gain, limiter };
+    const settings: BoostSettings = { gain: state.gain };
     sendResponse(settings);
     if (!isTopFrame) return;
     await updateBadge(tabId, state.gain);
@@ -97,22 +92,13 @@ chrome.runtime.onMessage.addListener((message: unknown, sender, sendResponse) =>
 
 // ── State fan-out ────────────────────────────────────────────────────────
 
-chrome.storage.onChanged.addListener((changes, area) => {
+chrome.storage.session.onChanged.addListener((changes) => {
   void (async () => {
-    if (area === "session") {
-      const { limiter } = await getSettings();
-      for (const [key, change] of Object.entries(changes)) {
-        const tabId = parseTabKey(key);
-        if (tabId === null) continue;
-        const gain = parseTabState(change.newValue)?.gain ?? GAIN_DEFAULT;
-        await Promise.all([pushSettings(tabId, { gain, limiter }), updateBadge(tabId, gain)]);
-      }
-    } else if (area === "local") {
-      const change = Object.entries(changes).find(([key]) => isSettingsKey(key))?.[1];
-      if (!change) return;
-      const { limiter } = parseSettings(change.newValue);
-      const tabs = await getAllTabStates();
-      await Promise.all([...tabs].map(([id, s]) => pushSettings(id, { gain: s.gain, limiter })));
+    for (const [key, change] of Object.entries(changes)) {
+      const tabId = parseTabKey(key);
+      if (tabId === null) continue;
+      const gain = parseTabState(change.newValue)?.gain ?? GAIN_DEFAULT;
+      await Promise.all([pushSettings(tabId, { gain }), updateBadge(tabId, gain)]);
     }
   })();
 });

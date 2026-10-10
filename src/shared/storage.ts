@@ -4,7 +4,7 @@
  *
  *  - `storage.session` → per-tab state (`tab:<id>`). Kept in memory by the
  *    browser and wiped on restart, so nothing accumulates on disk.
- *  - `storage.local`   → user preferences that should survive restarts.
+ *  - `storage.local`   → unused; only purged of keys from earlier versions.
  */
 import { clampGain, GAIN_DEFAULT } from "./gain";
 
@@ -16,16 +16,11 @@ export interface TabState {
   readonly source: "popup" | "command";
 }
 
-export interface Settings {
-  readonly limiter: boolean;
-}
-
-export const DEFAULT_SETTINGS: Settings = { limiter: true };
-
 const TAB_KEY_PREFIX = "tab:";
-const SETTINGS_KEY = "settings";
 /** Keys written by v1, which leaked one entry per tab into storage.local. */
 const LEGACY_KEY_PREFIX = "volboost:";
+/** Preferences key from when the limiter was a user toggle. */
+const LEGACY_SETTINGS_KEY = "settings";
 
 export function tabKey(tabId: number): string {
   return `${TAB_KEY_PREFIX}${tabId}`;
@@ -44,14 +39,6 @@ export function parseTabState(value: unknown): TabState | null {
     gain: clampGain(v.gain),
     origin: typeof v.origin === "string" ? v.origin : null,
     source: v.source === "command" ? "command" : "popup",
-  };
-}
-
-export function parseSettings(value: unknown): Settings {
-  if (typeof value !== "object" || value === null) return DEFAULT_SETTINGS;
-  const v = value as Record<string, unknown>;
-  return {
-    limiter: typeof v.limiter === "boolean" ? v.limiter : DEFAULT_SETTINGS.limiter,
   };
 }
 
@@ -102,23 +89,10 @@ export async function getAllTabStates(): Promise<Map<number, TabState>> {
   return out;
 }
 
-export async function getSettings(): Promise<Settings> {
-  const res = await chrome.storage.local.get(SETTINGS_KEY);
-  return parseSettings(res[SETTINGS_KEY]);
-}
-
-export async function setSettings(settings: Settings): Promise<void> {
-  await chrome.storage.local.set({ [SETTINGS_KEY]: parseSettings(settings) });
-}
-
-export function isSettingsKey(key: string): boolean {
-  return key === SETTINGS_KEY;
-}
-
-/** Remove per-tab keys left in storage.local by v1. */
+/** Remove keys left in storage.local by earlier versions. */
 export async function purgeLegacyStorage(): Promise<number> {
   const all = await chrome.storage.local.get(null);
-  const stale = Object.keys(all).filter((k) => k.startsWith(LEGACY_KEY_PREFIX));
+  const stale = Object.keys(all).filter((k) => k.startsWith(LEGACY_KEY_PREFIX) || k === LEGACY_SETTINGS_KEY);
   if (stale.length) await chrome.storage.local.remove(stale);
   return stale.length;
 }

@@ -10,8 +10,6 @@ import { GAIN_MAX, GAIN_MIN } from "./gain";
 export interface BoostSettings {
   /** Linear gain, 0–5. */
   readonly gain: number;
-  /** Route through a brick-wall limiter to prevent clipping. */
-  readonly limiter: boolean;
 }
 
 /** Background → content: apply these settings in every frame of the tab. */
@@ -52,8 +50,7 @@ export function isBoostSettings(value: unknown): value is BoostSettings {
     typeof value.gain === "number" &&
     Number.isFinite(value.gain) &&
     value.gain >= GAIN_MIN &&
-    value.gain <= GAIN_MAX &&
-    typeof value.limiter === "boolean"
+    value.gain <= GAIN_MAX
   );
 }
 

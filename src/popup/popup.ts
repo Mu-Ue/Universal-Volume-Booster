@@ -12,15 +12,7 @@ import {
   percentToGain,
 } from "../shared/gain";
 import { isContentStatus } from "../shared/messages";
-import {
-  getSettings,
-  getTabState,
-  originOf,
-  parseTabKey,
-  parseTabState,
-  setSettings,
-  setTabState,
-} from "../shared/storage";
+import { getTabState, originOf, parseTabKey, parseTabState, setTabState } from "../shared/storage";
 
 function $<T extends HTMLElement>(id: string, type: new () => T): T {
   const el = document.getElementById(id);
@@ -33,7 +25,6 @@ const controls = $("controls", HTMLElement);
 const slider = $("slider", HTMLInputElement);
 const valueEl = $("value", HTMLElement);
 const dbEl = $("db", HTMLElement);
-const limiterEl = $("limiter", HTMLInputElement);
 const notice = $("notice", HTMLElement);
 const noticeText = $("notice-text", HTMLElement);
 const noticeAction = $("notice-action", HTMLButtonElement);
@@ -105,17 +96,13 @@ async function ensureContentScript(tabId: number): Promise<Availability> {
 
 async function init(): Promise<void> {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  const [state, settings] = await Promise.all([
-    tab?.id !== undefined ? getTabState(tab.id) : null,
-    getSettings(),
-  ]);
+  const state = tab?.id !== undefined ? await getTabState(tab.id) : null;
 
   const origin = originOf(tab?.url);
   // A boost set on another site no longer applies (the background resets it
   // as soon as the new page loads), so don't display it either.
   const stale = Boolean(state?.origin && origin && state.origin !== origin);
   render(state && !stale ? state.gain : 1);
-  limiterEl.checked = settings.limiter;
   reveal();
 
   if (tab?.id === undefined) {
@@ -173,10 +160,6 @@ async function init(): Promise<void> {
   for (const chip of chips) {
     chip.addEventListener("click", () => { commit(percentToGain(Number(chip.dataset.percent))); });
   }
-
-  limiterEl.addEventListener("change", () => {
-    void setSettings({ limiter: limiterEl.checked });
-  });
 
   // Reflect changes made elsewhere (keyboard shortcuts, site navigation)
   // while the popup is open, but ignore echoes of our own writes.
