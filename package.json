@@ -1,8 +1,8 @@
 {
   "name": "volume-booster",
-  "version": "2.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "Boost any tab's audio up to 500%, including DRM-protected streams, with automatic crackle protection.",
+  "description": "Boost any tab's audio up to 500%, including DRM-protected streams.",
   "author": "Mu-Ue",
   "license": "MIT",
   "type": "module",
