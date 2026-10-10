@@ -203,23 +203,14 @@ input[type="range"]::-moz-range-thumb {
   box-shadow: 0 1px 3px rgb(0 0 0 / 0.35);
 }
 
+/* ── Preset labels ───────────────────────────────────────────────────── */
+
+/* Each label is centred under the thumb position for its value (the 18px
+   thumb's centre travels from 9px in on each side) with a large hit area. */
 .ticks {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 4px;
-  padding: 0 3px;
-  font-size: 10px;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-}
-
-/* ── Presets ─────────────────────────────────────────────────────────── */
-
-.presets {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-  margin-top: 14px;
+  position: relative;
+  height: 28px;
+  margin: 2px 9px 0;
 }
 
 button {
@@ -233,23 +224,29 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-.chip {
-  padding: 5px 0;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--surface);
-  font-size: 12px;
-  font-weight: 600;
+.tick {
+  position: absolute;
+  top: 0;
+  left: var(--at);
+  width: 44px;
+  height: 28px;
+  transform: translateX(-50%);
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
 
-.chip:hover {
-  border-color: var(--muted);
+.tick:hover {
+  background: var(--surface);
+  color: var(--text);
 }
 
-.chip[aria-pressed="true"] {
-  border-color: var(--accent);
+.tick[aria-pressed="true"] {
   color: var(--accent);
+  font-weight: 600;
 }
 
 /* ── Disabled / notice states ────────────────────────────────────────── */

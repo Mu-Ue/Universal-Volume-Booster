@@ -28,7 +28,7 @@ const dbEl = $("db", HTMLElement);
 const notice = $("notice", HTMLElement);
 const noticeText = $("notice-text", HTMLElement);
 const noticeAction = $("notice-action", HTMLButtonElement);
-const chips = [...document.querySelectorAll<HTMLButtonElement>(".chip[data-percent]")];
+const ticks = [...document.querySelectorAll<HTMLButtonElement>(".tick[data-percent]")];
 
 const ALL_SITES = ["<all_urls>"];
 const WHEEL_STEP_PERCENT = 5;
@@ -43,8 +43,8 @@ function render(gain: number): void {
   slider.setAttribute("aria-valuetext", `${percent} percent, ${formatDecibels(gain)}`);
   valueEl.textContent = String(percent);
   dbEl.textContent = formatDecibels(gain);
-  for (const chip of chips) {
-    chip.setAttribute("aria-pressed", String(Number(chip.dataset.percent) === percent));
+  for (const tick of ticks) {
+    tick.setAttribute("aria-pressed", String(Number(tick.dataset.percent) === percent));
   }
 }
 
@@ -157,8 +157,8 @@ async function init(): Promise<void> {
     { passive: false },
   );
 
-  for (const chip of chips) {
-    chip.addEventListener("click", () => { commit(percentToGain(Number(chip.dataset.percent))); });
+  for (const tick of ticks) {
+    tick.addEventListener("click", () => { commit(percentToGain(Number(tick.dataset.percent))); });
   }
 
   // Reflect changes made elsewhere (keyboard shortcuts, site navigation)
