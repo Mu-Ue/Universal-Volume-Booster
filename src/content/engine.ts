@@ -220,7 +220,9 @@ export class BoostEngine {
     }
     let ctx: AudioContext;
     try {
-      ctx = new AudioContext();
+      // A larger buffer avoids dropouts when several tabs are boosted at once;
+      // media playback doesn't need low latency.
+      ctx = new AudioContext({ latencyHint: "playback" });
     } catch (err) {
       warn("Web Audio is unavailable in this frame:", err);
       return null;
